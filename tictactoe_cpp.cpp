@@ -37,24 +37,31 @@ void print_board(const vector<vector<char>>& board) {
     }
 }
 
-// Function to check if the current player has won
+// Function to check if the current player has won.
+// A player wins with K marks in a row (K = min(size, 5)) in any of the four
+// directions: horizontal, vertical, and both diagonals. On a 3x3 board this is
+// the classic "full line of 3"; on larger boards it is connect-5, which keeps
+// big boards winnable instead of requiring a full 10-in-a-row line.
 bool check_win(const vector<vector<char>>& board, char player) {
     int size = board.size();
+    int k = min(size, 5);
+    const int dirs[4][2] = {{0, 1}, {1, 0}, {1, 1}, {1, -1}};
 
-    for (int i = 0; i < size; i++) {
-        if (all_of(board[i].begin(), board[i].end(), [player](char c) { return c == player; }) ||
-            all_of(board.begin(), board.end(), [i, player](const vector<char>& row) { return row[i] == player; })) {
-            return true;
+    for (int r = 0; r < size; r++) {
+        for (int c = 0; c < size; c++) {
+            if (board[r][c] != player) continue;
+            for (const auto& d : dirs) {
+                int count = 0, rr = r, cc = c;
+                while (rr >= 0 && rr < size && cc >= 0 && cc < size && board[rr][cc] == player) {
+                    if (++count == k) return true;
+                    rr += d[0];
+                    cc += d[1];
+                }
+            }
         }
     }
 
-    bool diag1 = true, diag2 = true;
-    for (int i = 0; i < size; i++) {
-        diag1 &= (board[i][i] == player);
-        diag2 &= (board[i][size - i - 1] == player);
-    }
-
-    return diag1 || diag2;
+    return false;
 }
 
 // Function to check if the game is a draw
@@ -78,7 +85,8 @@ pair<int, int> get_player_input(const vector<vector<char>>& board, char player) 
 
         row--; col--;
 
-        if (row >= 0 && row < board.size() && col >= 0 && col < board.size() && board[row][col] == ' ') {
+        int size = static_cast<int>(board.size());
+        if (row >= 0 && row < size && col >= 0 && col < size && board[row][col] == ' ') {
             return {row, col};
         } else {
             cout << "Invalid input or position already taken. Try again." << endl;
@@ -90,8 +98,9 @@ pair<int, int> get_player_input(const vector<vector<char>>& board, char player) 
 pair<int, int> get_ai_move(const vector<vector<char>>& board, const string& difficulty, char ai_player, char human_player) {
     vector<pair<int, int>> empty_cells;
 
-    for (int i = 0; i < board.size(); i++) {
-        for (int j = 0; j < board[i].size(); j++) {
+    int size = static_cast<int>(board.size());
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
             if (board[i][j] == ' ') {
                 empty_cells.push_back({i, j});
             }

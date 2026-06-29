@@ -17,13 +17,15 @@ The primary goal of this project is to compare the **performance** and **speed**
   - **Human vs Human**: Two players take turns marking 'X' and 'O'.
   - **Human vs AI**: One player competes against an AI, with the AI making strategic moves.
   
-- **Dynamic Board Size**: Players can choose between two grid sizes:
-  - 3x3
-  - 10x10
-  
-- **Win/Draw Detection**: After each turn, the game checks for a winner or a draw.
+- **Dynamic Board Size**: Players can choose any square grid from **3x3 up to 10x10**.
 
-- **AI Implementation**: The AI uses a basic strategy (like random moves or minimax) to make decisions in the **Human vs AI** mode.
+- **Win/Draw Detection**: After each turn, the game checks for a winner or a draw.
+  - **Win condition:** a player wins by getting **K in a row** (horizontally, vertically, or diagonally), where `K = min(board size, 5)`. On a 3x3 board this is the classic "full line of 3"; on larger boards it is connect-5, which keeps big boards actually winnable.
+
+- **AI Implementation**: The AI uses heuristic strategies in the **Human vs AI** mode, selectable by difficulty:
+  - **easy** – random valid move
+  - **medium** – blocks the opponent's immediate winning move, otherwise random
+  - **hard** – takes its own immediate winning move, else blocks the opponent, otherwise random
 
 ## Programming Languages
 
@@ -39,43 +41,37 @@ Each implementation provides the same gameplay functionality, allowing for a sid
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/tic-tac-toe.git
+    git clone https://github.com/asrnb/tictactoe-game.git
     ```
 
 2. **Navigate to the project directory:**
 
     ```bash
-    cd tic-tac-toe
+    cd tictactoe-game
     ```
 
 3. **For C++:**
 
     - Make sure you have a C++ compiler (e.g., `g++`) installed.
-    - Compile the C++ source code:
+    - Compile the C++ source code (C++11 or newer):
 
     ```bash
-    g++ cpp_version/tic_tac_toe.cpp -o tic_tac_toe_cpp
+    g++ -std=c++11 -O2 tictactoe_cpp.cpp -o tictactoe_cpp
     ```
 
     - Run the compiled executable:
 
     ```bash
-    ./tic_tac_toe_cpp
+    ./tictactoe_cpp
     ```
 
 4. **For Python:**
 
-    - Ensure that Python is installed (preferably Python 3.x).
-    - Install required dependencies (if any):
+    - Ensure that Python 3.x is installed. The game uses only the standard
+      library, so there are no extra dependencies to install.
 
     ```bash
-    pip install -r python_version/requirements.txt
-    ```
-
-    - Run the Python game:
-
-    ```bash
-    python python_version/tic_tac_toe.py
+    python tictactoe_py.py
     ```
 
 ## Usage

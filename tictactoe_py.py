@@ -14,14 +14,28 @@ def print_board(board):
         if i < size - 1:
             print("   " + "-" * (size * 4 - 1))
 
-# Function to check if the current player has won
+# Function to check if the current player has won.
+# A player wins with K marks in a row (K = min(size, 5)) in any of the four
+# directions: horizontal, vertical, and both diagonals. On a 3x3 board this is
+# the classic "full line of 3"; on larger boards it is connect-5, which keeps
+# big boards winnable instead of requiring a full 10-in-a-row line.
 def check_win(board, player):
     size = len(board)
-    for i in range(size):
-        if all([cell == player for cell in board[i]]) or all([board[j][i] == player for j in range(size)]):
-            return True
-    if all([board[i][i] == player for i in range(size)]) or all([board[i][size-i-1] == player for i in range(size)]):
-        return True
+    k = min(size, 5)
+    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
+    for r in range(size):
+        for c in range(size):
+            if board[r][c] != player:
+                continue
+            for dr, dc in directions:
+                count = 0
+                rr, cc = r, c
+                while 0 <= rr < size and 0 <= cc < size and board[rr][cc] == player:
+                    count += 1
+                    if count == k:
+                        return True
+                    rr += dr
+                    cc += dc
     return False
 
 # Function to check if the board is full, resulting in a draw

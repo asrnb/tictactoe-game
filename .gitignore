@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Compiled C++ binaries
+tictactoe_cpp
+*.o
+*.out
+a.out
